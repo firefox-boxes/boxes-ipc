@@ -70,7 +70,11 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 				return "boxes-shell: command not found"
 			}
 		case "whoami":
-			targetProcessID := boxes.ProcessID(strings.TrimSpace(cmdSplit[1]))
+			pid, err := strconv.Atoi(strings.TrimSpace(cmdSplit[1]))
+			if err != nil {
+				panic(err)
+			}
+			targetProcessID := boxes.ProcessID(pid)
 			for profileID, processID := range boxes.Exec {
 				if targetProcessID == processID {
 					return string(profileID)
