@@ -55,13 +55,23 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 			return "<done>"
 		case "box:attrs":
 			cmdSplit = strings.SplitN(cmdSplit[1], " ", 2)
+			parts := getParts(cmdSplit[1])
 			switch cmdSplit[0] {
 			case "set":
-				parts := getParts(cmdSplit[1])
 				attrDB.SetBoxAttrs(parts[0], parts[1], parts[2], parts[3])
 				return "<done>"
+			case "get":
+				attrs := attrDB.GetBoxAttrs(parts[0])
+				return attrs.Icon + "|" + attrs.Name + "|" + attrs.Exec
 			default:
 				return "boxes-shell: command not found"
+			}
+		case "whoami":
+			targetProcessID := boxes.ProcessID(strings.TrimSpace(cmdSplit[1]))
+			for profileID, processID := range boxes.Exec {
+				if targetProcessID == processID {
+					return string(profileID)
+				}
 			}
 		case "exec":
 			profileID := boxes.ProfileID(strings.TrimSpace(cmdSplit[1]))
