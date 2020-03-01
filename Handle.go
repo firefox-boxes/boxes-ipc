@@ -61,7 +61,10 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 				attrDB.SetBoxAttrs(parts[0], parts[1], parts[2], parts[3])
 				return "<done>"
 			case "get":
-				attrs := attrDB.GetBoxAttrs(parts[0])
+				attrs, err := attrDB.GetBoxAttrs(parts[0])
+				if err != nil {
+					panic(err)
+				}
 				return attrs.Icon + "|" + attrs.Name + "|" + attrs.Exec
 			default:
 				return "boxes-shell: command not found"
