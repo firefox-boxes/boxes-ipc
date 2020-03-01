@@ -80,6 +80,7 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 					return string(profileID)
 				}
 			}
+			return "<nobody>"
 		case "exec":
 			profileID := boxes.ProfileID(strings.TrimSpace(cmdSplit[1]))
 			running, processID := boxes.Exec.IsRunning(profileID)
