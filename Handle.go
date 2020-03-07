@@ -34,9 +34,9 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 			r := ""
 			for _, I := range boxes.GetInstallations() {
 				r += I.Exec
-				r += " "
+				r += "\n"
 			}
-			return strings.TrimSuffix(r, " ")
+			return strings.TrimSuffix(r, "\n")
 		case "box:ls":
 			r := ""
 			for _, attrs := range attrDB.GetAllBoxes() {
