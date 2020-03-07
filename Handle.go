@@ -90,6 +90,7 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 			}
 			if !running {
 				installation := boxes.Installation{Exec:attrs.Exec}
+				//TODO: Check if installation is legit
 				if !installation.IExists() {
 					return "<installation doesn't exist>"
 				}
