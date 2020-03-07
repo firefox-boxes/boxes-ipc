@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/firefox-boxes/boxes"
+	"github.com/go-vgo/robotgo"
 )
 
 func getParts(str string) []string {
@@ -95,6 +96,9 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 					return "<installation doesn't exist>"
 				}
 				processID = installation.ExecProfileAndDetach(profileID, p)
+			}
+			for int32(processID) != robotgo.GetPID() {
+				robotgo.ActivePID(int32(processID))
 			}
 			return strconv.Itoa(int(processID))
 		case "help":
