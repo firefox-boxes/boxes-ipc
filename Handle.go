@@ -55,10 +55,16 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 			attrDB.AddBox(string(profileID), parts[0], parts[1], parts[2])
 			return string(profileID)
 		case "box:del":
-			profileID := strings.TrimSpace(cmdSplit[1])
-			boxes.DeleteProfile(p, boxes.ProfileID(profileID))
-			attrDB.DeleteBox(profileID)
-			return "<done>"
+			if len(attrDB.GetAllBoxes()) > 1 {
+				profileID := strings.TrimSpace(cmdSplit[1])
+				boxes.DeleteProfile(p, boxes.ProfileID(profileID))
+				attrDB.DeleteBox(profileID)
+				if attrDB.GetDefault() == profileID {
+					attrDB.SetDefault(attrDB.GetAllBoxes()[0].Id)
+				}
+				return "<done>"
+			}
+			return "<only one box left>"
 		case "box:attrs":
 			cmdSplit = strings.SplitN(cmdSplit[1], " ", 2)
 			parts := getParts(cmdSplit[1])
