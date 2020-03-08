@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/firefox-boxes/boxes-ipc/logging"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -12,15 +14,21 @@ type AttrDB struct {
 }
 
 func InitAttrDB(dbPath string) AttrDB {
-	database, _ := sql.Open("sqlite3", dbPath)
+	database, _ := sql.Open("sqlite3", "file:" + dbPath + "?cache=shared&mode=rwc")
 	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS boxes (id TEXT PRIMARY KEY, icon TEXT, name TEXT, exec TEXT)")
-	statement.Exec()
+	_, err := statement.Exec()
+	if err != nil {
+		logging.Info(err.Error())
+	}
 	return AttrDB{database}
 }
 
 func (attrDB *AttrDB) AddBox(id string, icon string, name string, exec string) {
 	statement, _ := attrDB.db.Prepare("INSERT INTO boxes (id, icon, name, exec) VALUES (?, ?, ?, ?)")
-	statement.Exec(id, icon, name, exec)
+	_, err := statement.Exec(id, icon, name, exec)
+	if err != nil {
+		logging.Info(err.Error())
+	}
 }
 
 type Attrs struct {
@@ -32,6 +40,7 @@ type Attrs struct {
 
 func (attrDB *AttrDB) GetBoxAttrs(id string) (Attrs, error) {
 	rows, _ := attrDB.db.Query("SELECT id, icon, name, exec FROM boxes WHERE id=?", id)
+	defer rows.Close()
 	if rows.Next() {
 		var a Attrs
 		rows.Scan(&a.Id, &a.Icon, &a.Name, &a.Exec)
@@ -43,6 +52,7 @@ func (attrDB *AttrDB) GetBoxAttrs(id string) (Attrs, error) {
 
 func (attrDB *AttrDB) GetAllBoxes() []Attrs {
 	rows, _ := attrDB.db.Query("SELECT * FROM boxes")
+	defer rows.Close()
 	attrsList := make([]Attrs, 0)
 	for rows.Next() {
 		var a Attrs
