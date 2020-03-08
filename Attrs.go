@@ -9,17 +9,35 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func SetDefaultBox(database *sql.DB) {
+	statement, _ := database.Prepare("INSERT OR IGNORE INTO metadata (id, data) VALUES ('default-box', '<nobody>')")
+	_, err := statement.Exec()
+	if err != nil {
+		logging.Info(err.Error())
+	}
+}
+
 type AttrDB struct {
 	db *sql.DB
 }
 
 func InitAttrDB(dbPath string) AttrDB {
 	database, _ := sql.Open("sqlite3", "file:" + dbPath + "?cache=shared&mode=rwc")
+	
 	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS boxes (id TEXT PRIMARY KEY, icon TEXT, name TEXT, exec TEXT)")
 	_, err := statement.Exec()
 	if err != nil {
 		logging.Info(err.Error())
 	}
+	
+	statement, _ = database.Prepare("CREATE TABLE IF NOT EXISTS metadata (id TEXT PRIMARY KEY, data TEXT)")
+	_, err = statement.Exec()
+	if err != nil {
+		logging.Info(err.Error())
+	}
+
+	SetDefaultBox(database)
+	
 	return AttrDB{database}
 }
 
@@ -85,6 +103,22 @@ func (attrDB *AttrDB) SetExec(id string, exec string) {
 func (attrDB *AttrDB) DeleteBox(id string) {
 	statement, _ := attrDB.db.Prepare("DELETE FROM boxes WHERE id=?")
 	statement.Exec(id)
+}
+
+func (attrDB *AttrDB) GetDefault() string {
+	rows, _ := attrDB.db.Query("SELECT data FROM metadata WHERE id='default-box'")
+	if (rows.Next()) {
+		data := ""
+		rows.Scan(&data)
+		rows.Close()
+		return data
+	}
+	return "<nobody>"
+}
+
+func (attrDB *AttrDB) SetDefault(data string) {
+	statement, _ := attrDB.db.Prepare("UPDATE metadata SET data=? WHERE id='default-box'")
+	statement.Exec(data)
 }
 
 func (attrDB *AttrDB) Close() {

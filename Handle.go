@@ -44,6 +44,11 @@ func Handle(cmd string, attrDB AttrDB, p boxes.ProbeResult) string {
 			}
 			r += "<done>"
 			return r
+		case "default:get":
+			return attrDB.GetDefault()
+		case "default:set":
+			attrDB.SetDefault(strings.TrimSpace(cmdSplit[1]))
+			return "<done>"
 		case "box:new":
 			parts := getParts(cmdSplit[1])
 			profileID := boxes.NewProfileSetId(p)
