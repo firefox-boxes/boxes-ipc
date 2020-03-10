@@ -7,6 +7,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/firefox-boxes/boxes v0.0.0-20200301051841-1096082a26cb h1:FLJvx8WwsARgYSbvXv3k2jsEMaJPuxVGMie9qTOXFUs=
 github.com/firefox-boxes/boxes v0.0.0-20200301051841-1096082a26cb/go.mod h1:D8u4grzfwD22IoToUMrbD+M2vcUfj2uHYIG26htHdgk=
+github.com/firefox-boxes/boxes v0.0.0-20200309232806-46411180df11 h1:SWsJUHDmFlJhdQ9qxOQOC1KZFcGMPrC0yym26SsuHgE=
+github.com/firefox-boxes/boxes v0.0.0-20200309232806-46411180df11/go.mod h1:D8u4grzfwD22IoToUMrbD+M2vcUfj2uHYIG26htHdgk=
 github.com/go-ole/go-ole v1.2.4 h1:nNBDSCOigTSiarFpYE9J/KtEA1IOW4CNeqT9TQDqCxI=
 github.com/go-ole/go-ole v1.2.4/go.mod h1:XCwSNxSkXRo4vlyPy93sltvi/qJq0jqQhjqQNIwKuxM=
 github.com/go-vgo/robotgo v0.0.0-20200306180827-2eba2fee5d60 h1:W6zN2oGFesuioYZqvrjdnQWzWOSzUGjVYklKXFSd7DA=
